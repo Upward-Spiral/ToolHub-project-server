@@ -4,14 +4,17 @@ const bodyParser   = require('body-parser');
 const cookieParser = require('cookie-parser');
 const express      = require('express');
 const favicon      = require('serve-favicon');
-const hbs          = require('hbs');
+// const hbs          = require('hbs');
 const mongoose     = require('mongoose');
+const session      = require("express-session");
+const MongoStore   = require("connect-mongo")(session);
 const logger       = require('morgan');
 const path         = require('path');
+var cors           = require('cors');
 
 
 mongoose
-  .connect('mongodb://localhost/toolshare-server', {useNewUrlParser: true})
+  .connect(process.env.db, {useNewUrlParser: true,useUnifiedTopology: true})
   .then(x => {
     console.log(`Connected to Mongo! Database name: "${x.connections[0].name}"`)
   })
@@ -24,11 +27,25 @@ const debug = require('debug')(`${app_name}:${path.basename(__filename).split('.
 
 const app = express();
 
+app.use(
+  session({
+    secret: 'basic-auth-secret',
+    saveUninitialized: false,
+    resave: false,
+    cookie: { maxAge: 2400000},
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 24 * 60 * 60,
+    }),
+  })
+);
+
 // Middleware Setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 // Express View engine setup
 
@@ -49,10 +66,32 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+// Middleware Setup
+app.use('/user', protect);
+app.use('/tool', protect);
+app.use('/transaction', protect);
 
 
+//Routes
 const index = require('./routes/index');
 app.use('/', index);
+const user = require('./routes/user');
+app.use('/user', user);
+const tool = require('./routes/tool');
+app.use('/tool', tool);
+const transaction = require('./routes/transaction');
+app.use('/transaction', transaction);
+
+// Function defenitions
+//middleware definition
+function protect (req,res,next){ 
+  // debugger
+  if (req.session.currentUser) next()
+  else { res.status(403).json({
+    messageBody: "Login Required!"
+    }); 
+  }
+}
 
 
 module.exports = app;

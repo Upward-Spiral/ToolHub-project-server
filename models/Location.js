@@ -2,31 +2,22 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const locationSchema = new Schema({
-      city:{
-        type: String,
-        required:true
-      },
-      Street1: {
-        type: String,
-        required:true
-      },
-      Street2: {
-        type: String
-      },
-      lotNo: {
-        type: String,
-        required:true
-      },
-      unitNo: {
-        type: String
-      },
-      pcode: {
-        type: String,
-        required:true
-      }
-  
-  });
 
-// const Location = mongoose.model("locations",locationSchema)
+  type: {
+    type: String,
+    enum: ["point"],
+    default: "point"
+  },
+  coordinates: {
+    type: Array, // 
+    // longitude first and then latitude:
+    // Valid longitude values are between -180 and 180, both inclusive.
+    // Valid latitude values are between -90 and 90, both inclusive.
+
+  } 
+  
+});
+
+
 
 module.exports = locationSchema;

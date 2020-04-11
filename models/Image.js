@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const toolImageSchema = new Schema ({
+const imageSchema = new Schema ({
   imgName: {
     type: String,
     required: true
@@ -12,4 +12,4 @@ const toolImageSchema = new Schema ({
   }
 });
 
-module.exports = toolImageSchema;
+module.exports = imageSchema;

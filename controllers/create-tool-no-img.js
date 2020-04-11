@@ -3,37 +3,32 @@ const uploadCloud = require('../config/cloudinary.js');
 
 function createToolNoImg (userId,body) {
   var result="";
-  Tool.create({
-    name: body.name,
-    brand: body.brand,
-    modelNo: body.modelNo,
-    category: body.category,
-    subCategory1: body.subCategory1,
-    subCategory2: body.subCategory2,
-    description: body.description,
-    owner: userId,
-    shared: false
-  })
-  .then((toolData)=>{
-      console.log("created: ", toolData)
-      result= JSON.stringify({
-        code: "200",
-        messageBody: "Tool created successfully.",
-        data: toolData
+  return Tool.create({
+        name: body.name,
+        brand: body.brand,
+        modelNo: body.modelNo,
+        category: body.category,
+        subCategory1: body.subCategory1,
+        subCategory2: body.subCategory2,
+        description: body.description,
+        owner: userId,
+        shared: false
       })
-      console.log(`the result: ${result}`)
-      return result;
+      .then((toolData)=>{
+          console.log("created: ", toolData)
+          return ({
+            status: 200,
+            messageBody: "Tool created successfully.",
+            data: toolData
+          })          
+      })
+      .catch((err)=> {
+          return ({
+            status: 500,
+            messageBody: `Error, tool not created ${err}`
+          })
+      })
       
-  })
-  .catch((err)=> {
-      result= JSON.stringify({
-        code: "500",
-        messageBody: `Error, user not created ${err}`
-      })
-      console.log(`the error result: ${result}`)
-      return result;
-  })
-  
 }
 
 module.exports = createToolNoImg;

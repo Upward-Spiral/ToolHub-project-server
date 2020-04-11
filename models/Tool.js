@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const ToolImageSchema = require('../models/ToolImage');
+const ImageSchema = require('./Image');
 
 const toolSchema = new Schema({
       name:{
         type: String,
-        required:true
+        required:true,
+        lowercase: true
       },
       brand: {
         type: String,
@@ -17,17 +18,20 @@ const toolSchema = new Schema({
       },
       category: {
         type: String,
-        required:true
+        required:true,
+        lowercase: true
       },
       subCategory1: {
         type: String,
-        required:true
+        required:true,
+        lowercase: true
       },
       subCategory2: {
         type: String,
-        default: null
+        default: null,
+        lowercase: true
       },
-      images: [ToolImageSchema],
+      images: [ImageSchema],
       owner: { 
         type: mongoose.Types.ObjectId, 
         ref: "users" 

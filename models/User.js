@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const LocationSchema = require('../models/Location')
+const AddressSchema = require('./Address');
+const ImageSchema = require('./Image');
 
 const userSchema = new Schema({
     firstname: {
@@ -25,10 +26,6 @@ const userSchema = new Schema({
       required:true,
       unique: true
     },
-    image:{
-        type: String,
-        default: ""
-    },
     email: {
       type: String,
       required:true,
@@ -37,11 +34,11 @@ const userSchema = new Schema({
     phone: {
       type: String,
     },
-    address: [LocationSchema],
-    tools: [{
-      type: mongoose.Types.ObjectId, 
-      ref: "tools"
-    }],
+    address: [AddressSchema],
+    // tools: [{
+    //   type: mongoose.Types.ObjectId, 
+    //   ref: "tools"
+    // }],
     transactions: [{
       type: mongoose.Types.ObjectId, 
       ref: "transactions"
@@ -57,8 +54,8 @@ const userSchema = new Schema({
     buddy_request: [{
       type: mongoose.Types.ObjectId, 
       ref: "users"
-    }]
-  
+    }],
+    images: [ImageSchema]
   });
 
 const User = mongoose.model("users",userSchema)

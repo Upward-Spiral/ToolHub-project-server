@@ -106,17 +106,26 @@ router.post('/signup_passdoublecheck', (req, res) => {
 
 // Update user info from Signup (Second page)
 router.post('/update-np', (req,res)=>{
-  let {status,messageBody,data}= updateInfo(req.body)
-  if (status===200) {
-    res.status(200).json({
-      messageBody: messageBody,
-      data:data
-    })
-  } else {
-    res.status(500).json({
-        messageBody: messageBody
-      });
-  }
+  let userId = req.body._id
+  updateInfo(req.body, userId)
+   .then((response)=> {
+    let {status,messageBody,data}= response;
+    if (status===200) {
+      res.status(200).json({
+        messageBody: messageBody,
+        data:data
+      })
+    } else {
+      res.status(500).json({
+          messageBody: messageBody
+        });
+    }
+   })
+   .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, user not logged in because: ${err}`
+      })
+    });
 })
 
 

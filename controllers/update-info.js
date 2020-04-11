@@ -1,8 +1,8 @@
 const User = require('../models/User')
 
-function updateInfo(body){
+function updateInfo(body,userId){
   let {street1,street2,lotNo,unitNo,city,pcode} = body;
-  let userId = body._id
+  
   return User
       .findByIdAndUpdate(userId,{
         firstname: body.firstname,
@@ -14,6 +14,7 @@ function updateInfo(body){
         }
     }, {new:true})
     .then((userData) => {
+        // debugger
         console.log(userData)
         return ({
           status: 200,

@@ -1,5 +1,5 @@
 const Tool          = require ('../models/Tool');
-const uploadCloud = require('../config/cloudinary.js');
+const uploadCloud = require('../config/cloudinaryUsers.js');
 
 function createToolNoImg (userId,body) {
   var result="";

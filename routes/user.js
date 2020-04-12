@@ -6,10 +6,10 @@ const updateInfo        = require ("../controllers/update-info");
 const updateProfileImg  = require ('../controllers/update-profile-img');
 const getAllHerTools    = require ('../controllers/get-all-tools');
 const deleteTool        = require ('../controllers/delete-tool');
-const uploadCloud       = require ('../config/cloudinary.js');
+const uploadCloudUsers       = require ('../config/cloudinaryUsers.js');
 
 // Update user info inside the app
-router.post('/update', uploadCloud.single('user-img'), (req,res)=>{
+router.post('/update', uploadCloudUsers.single('user-img'), (req,res)=>{
 
   let userId = req.session.currentUser._id;
   if (!req.file) {
@@ -85,10 +85,17 @@ router.get('/toolshed/:id', (req,res)=> {
 
 // Logout
 router.get('/logout', (req, res) => {
-  req.session.destroy();
-  res.status(201).json({
-    messageBody: "Logout successfull."
-  });
+  if (req.session.currentUser) {
+    req.session.destroy();
+    res.status(201).json({
+      messageBody: "Logout successfull."
+    });
+  }else{
+    res.status(201).json({
+      messageBody: "User has no session (not logged in)"
+    });
+  }
+  
 });
 
 // Delete account

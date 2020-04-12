@@ -1,18 +1,25 @@
 const Tool          = require ('../models/Tool');
-const uploadCloud   = require('../config/cloudinary.js');
+var qs = require('qs');
+// const uploadCloud   = require('../config/cloudinaryTool.js');
 
-function createToolWithImg (userId,body,file) {
-    const imgPath= file.url;
-    const imgName= file.originalname;
-    var newImage = {"imgName":imgName, "imgPath":imgPath};
+function createTool (userId,body) {
+  debugger
+    var tempTool = qs.parse(body);
+    
+    // const imgPath= body["images[0][imgPath]"];
+    // const imgName= body["images[0][imgName]"];
+    // var newImage = {"imgName":imgName, "imgPath":imgPath};
+    var newImage = tempTool.images[0];
+    const tempCategory= tempTool.category;
+    // const subCategory1= body[category[1]];
+    // let tempCat = [category,subCategory1]
+    // var category = [body.category, body.subCategory1, body.subCategory2]
     return Tool
         .create ({
           name: body.name,
           brand: body.brand,
           modelNo: body.modelNo,
-          category: body.category,
-          subCategory1: body.subCategory1,
-          subCategory2: body.subCategory2,
+          category: tempCategory,
           description: body.description,
           owner: userId
           // $push: {
@@ -31,7 +38,7 @@ function createToolWithImg (userId,body,file) {
             }); 
           return ({
             status: 200,
-            messageBody: "Update successfull.",
+            messageBody: "created successfully.",
             data: toolData
           })
         })
@@ -77,4 +84,4 @@ function createToolWithImg (userId,body,file) {
 
 }
 
-module.exports = createToolWithImg;
+module.exports = createTool;

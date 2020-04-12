@@ -17,18 +17,8 @@ const toolSchema = new Schema({
         default: null
       },
       category: {
-        type: String,
+        type: Array,  
         required:true,
-        lowercase: true
-      },
-      subCategory1: {
-        type: String,
-        required:true,
-        lowercase: true
-      },
-      subCategory2: {
-        type: String,
-        default: null,
         lowercase: true
       },
       images: [ImageSchema],
@@ -54,3 +44,6 @@ const toolSchema = new Schema({
 const Tool = mongoose.model("tools",toolSchema)
 
 module.exports = Tool;
+
+
+	

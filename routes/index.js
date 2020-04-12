@@ -28,11 +28,7 @@ router.post('/signup', (req, res, next) => {
           password: hash,
         })
         .then(user => {
-            req.session.user = user;
-            res.status(200).json({
-              messageBody: "Signup successfull.",
-              data: user
-            });
+            res.status(200).json(user);
         })
         .catch(err => {
           res.status(500).json({
@@ -42,6 +38,30 @@ router.post('/signup', (req, res, next) => {
     }
   });
 });
+
+// Update user info from Signup (Second page)
+router.post('/update-np', (req,res)=>{
+  let userId = req.body._id
+  updateInfo(req.body, userId)
+   .then((response)=> {
+    let {status,messageBody,data}= response;
+    if (status===200) {
+      res.status(200).json({
+        messageBody: messageBody,
+        data:data
+      })
+    } else {
+      res.status(500).json({
+          messageBody: messageBody
+        });
+    }
+   })
+   .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, user not logged in because: ${err}`
+      })
+    });
+})
 
 
 // Check username for uniqueness
@@ -104,29 +124,7 @@ router.post('/signup_passdoublecheck', (req, res) => {
   }
 })
 
-// Update user info from Signup (Second page)
-router.post('/update-np', (req,res)=>{
-  let userId = req.body._id
-  updateInfo(req.body, userId)
-   .then((response)=> {
-    let {status,messageBody,data}= response;
-    if (status===200) {
-      res.status(200).json({
-        messageBody: messageBody,
-        data:data
-      })
-    } else {
-      res.status(500).json({
-          messageBody: messageBody
-        });
-    }
-   })
-   .catch(err => {
-      res.status(500).json({
-        messageBody: `Error, user not logged in because: ${err}`
-      })
-    });
-})
+
 
 
 // Login
@@ -157,10 +155,7 @@ router.post('/login', (req, res) => {
         });
         else {
           req.session.currentUser = user;
-          res.status(201).json({
-            messageBody: "Login successfull.",
-            data: user
-          });
+          res.status(201).json(user);
         }
       });
     })

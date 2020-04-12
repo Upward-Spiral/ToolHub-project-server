@@ -7,7 +7,7 @@ function updateInfo(body,userId){
       .findByIdAndUpdate(userId,{
         firstname: body.firstname,
         lastname: body.lastname,
-        email: body.email,
+        // email: body.email,
         phone: body.phone,
         "$set": {
           address: {street1,street2,lotNo,unitNo,city,pcode}

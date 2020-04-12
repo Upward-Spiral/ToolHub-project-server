@@ -40,12 +40,27 @@ app.use(
   })
 );
 
+// var whitelist = ['http://localhost:3000', 'http://localhost:5555']
+// var corsOptions = {
+//   credentials: true,
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS, because I said so!'))
+//     }
+//   }
+// }
+
 // Middleware Setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+  origin: ["https://localhost:3000", "http://localhost:3000"],
+  credentials: true
+}))
 
 // Express View engine setup
 

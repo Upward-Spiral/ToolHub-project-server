@@ -1,21 +1,25 @@
 const User = require('../models/User')
 
 function updateInfo(body,userId){
+  debugger
   let {street1,street2,lotNo,unitNo,city,pcode} = body;
-  
+  let type = body.locationType
+  let locationLatt = Math.round(Number(body.locationLatt)) 
+  let locationLong = Math.round(Number(body.locationLong)) 
+  let coordinates= [locationLong,locationLatt]
+  // let theLocation = {type,coordinates}
   return User
       .findByIdAndUpdate(userId,{
         firstname: body.firstname,
         lastname: body.lastname,
-        // email: body.email,
         phone: body.phone,
         "$set": {
-          address: {street1,street2,lotNo,unitNo,city,pcode}
+          address: {street1,street2,lotNo,unitNo,city,pcode},
+          location: {type,coordinates}
         }
     }, {new:true})
     .then((userData) => {
-        // debugger
-        console.log(userData)
+          console.log(userData)
         return ({
           status: 200,
           messageBody: "Update successfull.",
@@ -23,6 +27,7 @@ function updateInfo(body,userId){
         })
     })
     .catch(err => {
+      console.log(err)
       return ({
         status: 500,
         messageBody: `Error, user not logged in because: ${err}`,

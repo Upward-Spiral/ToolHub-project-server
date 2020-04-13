@@ -37,6 +37,10 @@ const toolSchema = new Schema({
       available: {
         type: Boolean,
         default: true
+      },
+      location: { 
+        type: { type: String }, 
+        coordinates: [Number] 
       }
   
   });

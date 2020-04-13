@@ -63,7 +63,6 @@ router.post('/update-np', (req,res)=>{
     });
 })
 
-
 // Check username for uniqueness
 router.get('/signup_usernamecheck/:username', (req, res) => {
   let username = req.params.username;
@@ -123,9 +122,6 @@ router.post('/signup_passdoublecheck', (req, res) => {
     })
   }
 })
-
-
-
 
 // Login
 router.post('/login', (req, res) => {

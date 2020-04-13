@@ -35,10 +35,10 @@ const userSchema = new Schema({
       type: String,
     },
     address: [AddressSchema],
-    // tools: [{
-    //   type: mongoose.Types.ObjectId, 
-    //   ref: "tools"
-    // }],
+    location: { 
+      type: { type: String }, 
+      coordinates: [Number] 
+      },
     transactions: [{
       type: mongoose.Types.ObjectId, 
       ref: "transactions"
@@ -57,6 +57,8 @@ const userSchema = new Schema({
     }],
     images: [ImageSchema]
   });
+
+  userSchema.index({location: '2dsphere'})
 
 const User = mongoose.model("users",userSchema)
 

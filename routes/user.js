@@ -7,6 +7,7 @@ const updateProfileImg  = require ('../controllers/update-profile-img');
 const getAllHerTools    = require ('../controllers/get-all-tools');
 const deleteTool        = require ('../controllers/delete-tool');
 const uploadCloudUsers       = require ('../config/cloudinaryUsers.js');
+// const getGeoJsonLocation = require ('../controllers/get-location')
 
 // Update user info inside the app
 router.post('/update', uploadCloudUsers.single('user-img'), (req,res)=>{
@@ -67,7 +68,8 @@ router.get('/profile', (req,res)=>{
 })
 
 // Get list of all her tools
-router.get('/toolshed/:id', (req,res)=> {
+router.get('/toolshed', (req,res)=> {
+  debugger
   let userId = req.session.currentUser._id;
   getAllHerTools(userId)
     .then ((toolsList)=>{
@@ -131,6 +133,21 @@ router.get('/delete', (req,res)=> {
     });
 })
 
+
+// router.post('/get-geo', (req, res, next) => {
+//   debugger
+//     let theAddress = req.body
+//     console.log(theAddress)
+
+//   getGeoJsonLocation(theAddress)
+//   .then((res) => {
+    
+//     res.json(res)
+//   }).catch((err) => {
+//     res.json({error: err})
+//   });
+  
+// });
 
 
 module.exports = router;

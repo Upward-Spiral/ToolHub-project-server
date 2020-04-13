@@ -4,7 +4,7 @@ const Tool              = require ('../models/Tool');
 // const multer         = require('multer');
 const uploadCloudTool   = require('../config/cloudinaryTool.js');
 const createTool = require('../controllers/create-tool');
-const createToolNoImg   = require('../controllers/create-tool-no-img');
+// const createToolNoImg   = require('../controllers/create-tool-no-img');
 const deleteTool        = require ('../controllers/delete-tool');
 
 // Search all the shared tools by name
@@ -47,6 +47,7 @@ router.get('/search', (req, res, next) => {
     });
 });
 
+
 // Get all info on one tool
 router.get('/detail/:id', (req,res) => {
   let toolId = req.params.id;
@@ -67,11 +68,9 @@ router.get('/detail/:id', (req,res) => {
 })
 
 // Create a new tool
-router.post("/create", /* uploadCloudTool.single('tool-img'), */(req,res)=>{
+router.post("/create", (req,res)=>{
   debugger
   let userId = req.session.currentUser._id;
-    // let temp_re_body = {...req.body}
-
     createTool(userId,req.body)
     .then ((response) => {
       let {status,messageBody,data}= response;
@@ -125,28 +124,6 @@ router.post('/upload-image', uploadCloudTool.single('tool-img'), (req,res)=>{
   var newImage = {imgName:imgName, imgPath:imgPath};
   console.log(newImage);
   res.status(200).json(newImage);
-  
-  // Tool.findById(toolId)
-  //   .then((tool)=>{
-  //     picFiles.forEach((pic)=>{
-  //       let imgPath = pic.url;
-  //       let imgName = pic.originalname;
-  //       let newImage = {"imgName":imgName, "imgPath":imgPath}; 
-  //       tool.images.push(newImage);
-  //     })
-  //     tool.save().then((response)=>{
-  //       console.log(response.images)
-  //     }).catch((err)=>{console.log(err)})
-  //     res.status(200).json({
-  //       messageBody: "I hope this went ok!",
-  //       date: tool
-  //     })
-  //   })
-  //   .catch(err => {
-  //     res.status(500).json({
-  //       messageBody: `Error, images not updated because: ${err}`
-  //     })
-  //   }); 
 })
 
 

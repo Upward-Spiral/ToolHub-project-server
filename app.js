@@ -85,6 +85,7 @@ app.locals.title = 'Express - Generated with IronGenerator';
 app.use('/user', protect);
 app.use('/tool', protect);
 app.use('/transaction', protect);
+// app.use('/location', protect);
 
 
 //Routes
@@ -96,6 +97,8 @@ const tool = require('./routes/tool');
 app.use('/tool', tool);
 const transaction = require('./routes/transaction');
 app.use('/transaction', transaction);
+// const location = require('./routes/location');
+// app.use('/location', location);
 
 // Function defenitions
 //middleware definition

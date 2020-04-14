@@ -50,6 +50,26 @@ router.post('/update', uploadCloudUsers.single('user-img'), (req,res)=>{
   
 })
 
+// Get list of her friends
+router.get('/buddies', (req,res)=>{
+  debugger
+  let userId = req.session.currentUser._id;
+  User.findById(userId)
+  .populate('buddies')
+  .then ((userData)=>{
+    let buddiesData = userData.buddies
+    res.status(200).json({
+      messageBody: "Fetch successful.",
+      data: buddiesData
+    })
+  })
+  .catch(err => {
+    res.status(500).json({
+      messageBody: `Error, could not fetch user data because: ${err}`
+    })
+  });
+} )
+
 // Get profile
 router.get('/profile', (req,res)=>{
   let userId = req.session.currentUser._id;

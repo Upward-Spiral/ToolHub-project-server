@@ -5,8 +5,9 @@ var qs = require('qs');
 function createTool (userId,body) {
   debugger
     var tempTool = qs.parse(body);
-    var newImage = tempTool.images[0];
+    if (tempTool.images) var newImage = tempTool.images[0];   
     let type = body.locationType
+    debugger
     let locationLatt = Number(body.locationLatt);
     let locationLong = Number(body.locationLong);
     let coordinates= [locationLong,locationLatt]
@@ -19,18 +20,10 @@ function createTool (userId,body) {
           category: tempCategory,
           description: body.description,
           owner: userId,
-          // "$set": {
-          //   location: {type,coordinates}
-          // }
-          // $push: {
-          //   images : newImage
-          // }
+          location: {type,coordinates}
         })
         .then((toolData) => {
-          toolData.images.push(newImage);
-          toolData.location.type = type;
-          toolData.location.coordinates[0] = locationLong;
-          toolData.location.coordinates[1] = locationLatt;
+          if(toolData.images) toolData.images.push(newImage);
           toolData.save()
             .then((toolData)=>{
               console.log(toolData)

@@ -8,37 +8,64 @@ const createTool = require('../controllers/create-tool');
 const deleteTool        = require ('../controllers/delete-tool');
 
 // Search all the shared tools by name
-router.get('/search', (req, res, next) => {
-  let thePhrase = req.query.name
-  // thePhrase = thePhrase.toLowercase()
-
-  // Tool.find(
-  //   {
-  //     $and: [
-  //     { name: { $regex: thePhrase, $options: 'ix'  }},
-  //     { shared: true}
-  //   ]
-  // }
-  // )
+router.post('/search', (req, res, next) => {
+  debugger
+  let searchPhrase = req.body.word
+  let searchCo = [Number(req.body.long),Number(req.body.latt) ]  // e.g. [4.8670948,52.3756701]
+  console.log (searchCo)
   Tool.aggregate([
     {
-      $geoNear
+      // $and: [
+      //   {
+      //     location:
+      //   { 
+      //     $near :
+      //     {
+      //       $geometry: { type: "Point",  coordinates: searchCo },
+      //       $minDistance: 10,
+      //       $maxDistance: 20000000
+      //     }
+      //   }
+      //   },
+      //   {
+      //      "name": searchPhrase 
+      //   }
+      // ]
+     
+      
+      // $geoNear: 
+      // {
+      //   near: { type: "Point", coordinates: searchCo },
+      //   distanceField: "distanceFrom",
+      //   maxDistance: 200000,
+      //   query: { "name": searchPhrase }
+      // }
+
+      '$geoNear': {
+        'near': {
+          'type': 'Point', 
+          'coordinates': searchCo
+          // [
+          //   4.8670948, 52.3756701
+          // ]
+        }, 
+        'distanceField': 'distanceFrom', 
+        'maxDistance': 200000, 
+        'query': {
+          'name': new RegExp(searchPhrase)
+        }
+      }
     }
   ])
-    .populate('owner','displayname')
-    // .where('shared')
-    // .equals(true)
-    .select({ 
-      "name": 1, 
-      "owner.displayname":1, 
-      "available":1,
-      "image": 1
-    })
+    // .populate('owner','displayname')
+    // .select({ 
+    //   "name": 1, 
+    //   "owner.displayname":1, 
+    //   "available":1,
+    //   "distanceFrom": 1
+    // })
     .then((toolData)=>{
-      res.status(200).json({
-        messageBody: "Fetch successful.",
-        data:toolData
-      })
+      res.status(200).json(toolData)
     })
     .catch(err => {
       res.status(500).json({

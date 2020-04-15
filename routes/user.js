@@ -154,20 +154,6 @@ router.get('/delete', (req,res)=> {
 })
 
 
-// router.post('/get-geo', (req, res, next) => {
-//   debugger
-//     let theAddress = req.body
-//     console.log(theAddress)
-
-//   getGeoJsonLocation(theAddress)
-//   .then((res) => {
-    
-//     res.json(res)
-//   }).catch((err) => {
-//     res.json({error: err})
-//   });
-  
-// });
 
 
 module.exports = router;

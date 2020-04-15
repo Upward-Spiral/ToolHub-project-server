@@ -41,6 +41,13 @@ const toolSchema = new Schema({
       location: { 
         type: { type: String }, 
         coordinates: [Number] 
+      },
+      requested_by:{
+        type: Array,
+
+      },
+      reserved_by:{
+        type: Array
       }
   
   });

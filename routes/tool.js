@@ -11,7 +11,7 @@ const deleteTool        = require ('../controllers/delete-tool');
 router.post('/search', (req, res, next) => {
   debugger
   let searchPhrase = req.body.word
-  let searchCo = [Number(req.body.long),Number(req.body.latt) ]  // e.g. [4.8670948,52.3756701]
+  let searchCo = [Number(req.body.lng),Number(req.body.lat) ]  // e.g. [4.8670948,52.3756701]
   console.log (searchCo)
   Tool.aggregate([
     {
@@ -153,6 +153,81 @@ router.post('/upload-image', uploadCloudTool.single('tool-img'), (req,res)=>{
   res.status(200).json(newImage);
 })
 
+// Share a tool
+router.get('/share/:id', (req,res) => {
+  debugger
+  let toolId = req.params.id;
+  Tool.findByIdAndUpdate(toolId, {
+    shared:true
+  },{new:true})
+    .then((toolData) => {
+      console.log(toolData)
+      res.status(200).json(toolData)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool detail because: ${err}`
+      })
+    });
+
+})
+
+// Unshare a tool
+router.get('/unshare/:id', (req,res) => {
+  debugger
+  let toolId = req.params.id;
+  Tool.findByIdAndUpdate(toolId, {
+    shared:false
+  },{new:true})
+    .then((toolData) => {
+      console.log(toolData)
+      res.status(200).json(toolData)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool detail because: ${err}`
+      })
+    });
+
+})
+
+// Borrow a tool
+router.get('/borrow/:id', (req,res) => { // not finished
+  debugger
+  let toolId = req.params.id;
+  // Tool.findByIdAndUpdate(toolId, {
+  //   shared:true
+  // },{new:true})
+  //   .then((toolData) => {
+  //     console.log(toolData)
+  //     res.status(200).json(toolData)
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json({
+  //       messageBody: `Error, could not fetch tool detail because: ${err}`
+  //     })
+  //   });
+
+})
+
+// Reserve a tool
+router.get('/reserve/:id', (req,res) => {   // not finished!
+  debugger
+  let toolId = req.params.id;
+  // Tool.findByIdAndUpdate(toolId, {
+  //   shared:false
+  // },{new:true})
+  //   .then((toolData) => {
+  //     console.log(toolData)
+  //     res.status(200).json(toolData)
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json({
+  //       messageBody: `Error, could not fetch tool detail because: ${err}`
+  //     })
+  //   });
+
+})
 
 // Delete a tool
 router.get('/delete/:id', (req,res)=> {

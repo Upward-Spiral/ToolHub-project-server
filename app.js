@@ -34,7 +34,7 @@ const app = express();
 
 app.use(
   session({
-    secret: 'basic-auth-secret',
+    secret: process.env.SESSION_SECRET,
     saveUninitialized: false,
     resave: false,
     cookie: { maxAge: 36000000}, //10 hours
@@ -63,7 +63,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
-  origin: ["https://localhost:3000", "http://localhost:3000"],
+  origin: [process.env.client_origin_a, process.env.client_origin_b],
   credentials: true
 }))
 

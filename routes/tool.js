@@ -6,6 +6,7 @@ const uploadCloudTool   = require('../config/cloudinaryTool.js');
 const createTool = require('../controllers/create-tool');
 // const createToolNoImg   = require('../controllers/create-tool-no-img');
 const deleteTool        = require ('../controllers/delete-tool');
+const getAllHerTools    = require ('../controllers/get-all-tools');
 
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
@@ -15,39 +16,11 @@ router.post('/search', (req, res, next) => {
   console.log (searchCo)
   Tool.aggregate([
     {
-      // $and: [
-      //   {
-      //     location:
-      //   { 
-      //     $near :
-      //     {
-      //       $geometry: { type: "Point",  coordinates: searchCo },
-      //       $minDistance: 10,
-      //       $maxDistance: 20000000
-      //     }
-      //   }
-      //   },
-      //   {
-      //      "name": searchPhrase 
-      //   }
-      // ]
-     
-      
-      // $geoNear: 
-      // {
-      //   near: { type: "Point", coordinates: searchCo },
-      //   distanceField: "distanceFrom",
-      //   maxDistance: 200000,
-      //   query: { "name": searchPhrase }
-      // }
 
       '$geoNear': {
         'near': {
           'type': 'Point', 
           'coordinates': searchCo
-          // [
-          //   4.8670948, 52.3756701
-          // ]
         }, 
         'distanceField': 'distanceFrom', 
         'maxDistance': 200000, 
@@ -55,25 +28,45 @@ router.post('/search', (req, res, next) => {
           'name': new RegExp(searchPhrase)
         }
       }
+    },
+    {
+      '$lookup': {
+        'from': 'users', 
+        'localField': 'owner', 
+        'foreignField': '_id', 
+        'as': 'owner'
+      }
     }
-  ])
-    // .populate('owner','displayname')
-    // .select({ 
-    //   "name": 1, 
-    //   "owner.displayname":1, 
-    //   "available":1,
-    //   "distanceFrom": 1
-    // })
+  ]) 
     .then((toolData)=>{
-      res.status(200).json(toolData)
+          console.log(toolData)
+          res.status(200).json(toolData)   
     })
     .catch(err => {
+      console.log(err)
       res.status(500).json({
         messageBody: `Error, could not fetch because: ${err}`
       })
     });
 });
 
+// Get list of all her tools
+router.get('/toolshed', (req,res)=> {
+  debugger
+  let userId = req.session.currentUser._id;
+  getAllHerTools(userId)
+    .then ((toolsList)=>{
+      res.status(200).json({
+        messageBody: "Fetch successful.",
+        data: toolsList
+      })
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool list because: ${err}`
+      })
+    });
+})
 
 // Get all info on one tool
 router.get('/detail/:id', (req,res) => {
@@ -194,19 +187,22 @@ router.get('/unshare/:id', (req,res) => {
 // Borrow a tool
 router.get('/borrow/:id', (req,res) => { // not finished
   debugger
+  let userId = req.session.currentUser._id;
   let toolId = req.params.id;
-  // Tool.findByIdAndUpdate(toolId, {
-  //   shared:true
-  // },{new:true})
-  //   .then((toolData) => {
-  //     console.log(toolData)
-  //     res.status(200).json(toolData)
-  //   })
-  //   .catch(err => {
-  //     res.status(500).json({
-  //       messageBody: `Error, could not fetch tool detail because: ${err}`
-  //     })
-  //   });
+  Tool.findByIdAndUpdate(toolId, {
+    $push:{
+      requested_by: userId
+    }
+  },{new:true})
+    .then((toolData) => {
+      console.log(toolData)
+      res.status(200).json(toolData)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool detail because: ${err}`
+      })
+    });
 
 })
 
@@ -214,18 +210,20 @@ router.get('/borrow/:id', (req,res) => { // not finished
 router.get('/reserve/:id', (req,res) => {   // not finished!
   debugger
   let toolId = req.params.id;
-  // Tool.findByIdAndUpdate(toolId, {
-  //   shared:false
-  // },{new:true})
-  //   .then((toolData) => {
-  //     console.log(toolData)
-  //     res.status(200).json(toolData)
-  //   })
-  //   .catch(err => {
-  //     res.status(500).json({
-  //       messageBody: `Error, could not fetch tool detail because: ${err}`
-  //     })
-  //   });
+  Tool.findByIdAndUpdate(toolId, {
+    $push:{
+      reserved_by: userId
+    }
+  },{new:true})
+    .then((toolData) => {
+      console.log(toolData)
+      res.status(200).json(toolData)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool detail because: ${err}`
+      })
+    });
 
 })
 

@@ -4,7 +4,7 @@ const router            = express.Router();
 const User              = require ('../models/User')
 const updateInfo        = require ("../controllers/update-info");
 const updateProfileImg  = require ('../controllers/update-profile-img');
-const getAllHerTools    = require ('../controllers/get-all-tools');
+
 const deleteTool        = require ('../controllers/delete-tool');
 const uploadCloudUsers       = require ('../config/cloudinaryUsers.js');
 // const getGeoJsonLocation = require ('../controllers/get-location')
@@ -87,23 +87,7 @@ router.get('/profile', (req,res)=>{
   });
 })
 
-// Get list of all her tools
-router.get('/toolshed', (req,res)=> {
-  debugger
-  let userId = req.session.currentUser._id;
-  getAllHerTools(userId)
-    .then ((toolsList)=>{
-      res.status(200).json({
-        messageBody: "Fetch successful.",
-        data: toolsList
-      })
-    })
-    .catch(err => {
-      res.status(500).json({
-        messageBody: `Error, could not fetch tool list because: ${err}`
-      })
-    });
-})
+
 
 // Logout
 router.get('/logout', (req, res) => {

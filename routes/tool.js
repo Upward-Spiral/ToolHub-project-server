@@ -11,12 +11,12 @@ const getAllHerTools    = require ('../controllers/get-all-tools');
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
   debugger
+  let userId = req.session.currentUser._id;
   let searchPhrase = req.body.word
   let searchCo = [Number(req.body.lng),Number(req.body.lat) ]  // e.g. [4.8670948,52.3756701]
   console.log (searchCo)
   Tool.aggregate([
     {
-
       '$geoNear': {
         'near': {
           'type': 'Point', 
@@ -25,8 +25,17 @@ router.post('/search', (req, res, next) => {
         'distanceField': 'distanceFrom', 
         'maxDistance': 200000, 
         'query': {
-          'name': new RegExp(searchPhrase)
+          // $and:[
+          //   {
+              'name': new RegExp(searchPhrase)
+           // }
+          //   ,{
+          //     'owner': 
+          //       {'$ne': new ObjectId(userId)}
+          //   }
+          // ]
         }
+        
       }
     },
     {

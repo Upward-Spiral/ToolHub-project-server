@@ -4,8 +4,8 @@ function updateInfo(body,userId){
   debugger
   let {street1,street2,lotNo,unitNo,city,pcode} = body;
   let type = body.locationType
-  let locationLatt = Math.round(Number(body.locationLatt)) 
-  let locationLong = Math.round(Number(body.locationLong)) 
+  let locationLatt = Number(body.locationLatt) 
+  let locationLong = Number(body.locationLong) 
   let coordinates= [locationLong,locationLatt]
   // let theLocation = {type,coordinates}
   return User

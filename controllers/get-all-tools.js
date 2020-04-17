@@ -3,7 +3,7 @@ const Tool  = require ('../models/Tool');
 
 function getAllHerTools (userId) {
   return Tool.find({owner:userId})
-      
+          .populate('requested_by')
           .then((toolList)=>{
             return toolList
           })

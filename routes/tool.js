@@ -80,14 +80,12 @@ router.get('/toolshed', (req,res)=> {
 
 // Get all info on one tool
 router.get('/detail/:id', (req,res) => {
+  debugger
   let toolId = req.params.id;
   Tool.findById(toolId)
     .populate('owner')
     .then((toolData) => {
-      res.status(200).json({
-        messageBody: "Fetch successful.",
-        data:toolData
-      })
+      res.status(200).json({toolData})
     })
     .catch(err => {
       res.status(500).json({
@@ -123,6 +121,7 @@ router.post("/create", (req,res)=>{
 
 // Update a tool (not image)
 router.post ('/update', (req,res) => {
+  debugger
   let toolId = req.body.id
   updateTool(toolId,req.body)
   .then ((response) => {
@@ -144,6 +143,7 @@ router.post ('/update', (req,res) => {
 
 // Update a tool's image
 router.post ('/update-img', (req,res) => {
+  debugger
   let toolId = req.body.id
   let newImage = qs.parse(req.body)
   Tool.findById(toolId)
@@ -258,8 +258,39 @@ router.get('/reserve/:id', (req,res) => {   // not finished!
 
 })
 
+// Lend tool
+router.post('/lend', (req,res) => {   // not finished!
+  debugger
+  let toolId = req.body.tool;
+  var requesterId = req.body.requester
+  Tool.findByIdAndUpdate(toolId, {
+    $push:{
+      lended_to: requesterId
+    }
+  },{new:true})
+    .then((toolData) => {
+      toolData.requested_by.pull(requesterId)
+      toolData.save()
+        .then((response)=>{
+          console.log(toolData)
+          res.status(200).json(toolData)
+        })
+        .catch ((err)=>{
+          console.log(err)
+        })
+      
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool detail because: ${err}`
+      })
+    });
+
+})
+
 // Delete a tool
 router.get('/delete/:id', (req,res)=> {
+  debugger
   let toolId = req.params.id;
   deleteTool(toolId)
   .then((response)=>{
@@ -272,20 +303,7 @@ router.get('/delete/:id', (req,res)=> {
     console.log( `Error, user deleted because: ${err}`)
   })
 
-  // Tool.findByIdAndDelete(userId)
-  //   .then((response)=> {
-  //     res.status(200).json({
-  //       messageBody: "Tool deleted successfully.",
-  //       data:response
-  //     })
-  //   })
-  //   .catch(err => {
-  //     return ({
-  //       status: 500,
-  //       messageBody: `Error, tool deleted because: ${err}`,
-  //       data: null
-  //     })
-  //   });
+ 
 })
 
 

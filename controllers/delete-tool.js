@@ -2,6 +2,7 @@
 const Tool    = require ('../models/Tool');
 
 function deleteTool (toolId) {
+  debugger
   return Tool.findByIdAndDelete(toolId)
     .then((response)=>{
        return ({

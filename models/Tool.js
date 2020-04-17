@@ -42,13 +42,22 @@ const toolSchema = new Schema({
         type: { type: String }, 
         coordinates: [Number] 
       },
-      requested_by:{
-        type: Array,
-
-      },
-      reserved_by:{
-        type: Array
-      }
+      requested_by:[{
+        type: mongoose.Types.ObjectId, 
+        ref: "users"
+      }],
+      reserved_by:[{
+        type: mongoose.Types.ObjectId, 
+        ref: "users"
+      }],
+      lended_to:[{
+        type: mongoose.Types.ObjectId, 
+        ref: "users"
+      }],
+      reserved_for:[{
+        type: mongoose.Types.ObjectId, 
+        ref: "users"
+      }]
   
   });
 

@@ -7,6 +7,7 @@ const createTool = require('../controllers/create-tool');
 // const createToolNoImg   = require('../controllers/create-tool-no-img');
 const deleteTool        = require ('../controllers/delete-tool');
 const getAllHerTools    = require ('../controllers/get-all-tools');
+const updateTool        = require ('../controllers/update-tool')
 
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
@@ -123,26 +124,47 @@ router.post("/create", (req,res)=>{
 // Update a tool (not image)
 router.post ('/update', (req,res) => {
   let toolId = req.body.id
-  Tool.findByIdAndUpdate(toolId, {
-    name: req.body.name,
-    brand: req.body.brand,
-    modelNo: req.body.modelNo,
-    category: req.body.category,
-    subCategory1: req.body.subCategory1,
-    subCategory2: req.body.subCategory2,
-    description: req.body.description
-  }, {new:true})
-  .then((toolData) => {
-    res.status(200).json({
-      messageBody: "Tool updated successfully!",
-      data: toolData
-    })
+  updateTool(toolId,req.body)
+  .then ((response) => {
+    let {status,messageBody,data}= response;
+    if (status===200) {
+      res.status(200).json(data)
+    } else {
+      res.status(500).json({
+          messageBody: messageBody
+        });
+    }
   })
   .catch(err => {
     res.status(500).json({
-      messageBody: `Error, tool not updated because: ${err}`
+      messageBody: `Error, tool not created because: ${err}`
     })
   });
+})
+
+// Update a tool's image
+router.post ('/update-img', (req,res) => {
+  let toolId = req.body.id
+  let newImage = qs.parse(req.body)
+  Tool.findById(toolId)
+  .then((toolData) => {
+    if(toolData.images) toolData.images.push(newImage);
+    toolData.save()
+      .then((toolData)=>{
+        console.log(toolData)
+        res.status(200).json ({toolData})
+      .catch(err => {
+        console.log(err)
+      }); 
+    
+    })
+  })
+  .catch(err => {
+   res.status(500).json({
+      messageBody: `Error, from outer catch in controller because: ${err}`,
+      data: null
+    })
+  }); 
 })
 
 // Upload images for a tool

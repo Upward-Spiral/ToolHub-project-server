@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const mongoose    = require("mongoose");
+const Schema      = mongoose.Schema;
 const ImageSchema = require('./Image');
 
 const toolSchema = new Schema({
@@ -50,10 +50,10 @@ const toolSchema = new Schema({
         type: mongoose.Types.ObjectId, 
         ref: "users"
       }],
-      lended_to:[{
+      lended_to:{
         type: mongoose.Types.ObjectId, 
         ref: "users"
-      }],
+      },
       reserved_for:[{
         type: mongoose.Types.ObjectId, 
         ref: "users"

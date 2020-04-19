@@ -136,6 +136,7 @@ router.post('/login', (req, res) => {
     .findOne({
         username
     })
+    .populate("buddies")
     .then(user => {
       if (!user) {
         res.status(404).json({

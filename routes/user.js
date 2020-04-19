@@ -71,8 +71,9 @@ router.get('/buddies', (req,res)=>{
 } )
 
 // Get profile
-router.get('/profile', (req,res)=>{
-  let userId = req.session.currentUser._id;
+router.get('/profile/:id', (req,res)=>{
+  // let loggedUserId = req.session.currentUser._id;
+  let userId = req.params.id;
   User.findById(userId)
   .then ((userData)=>{
     res.status(200).json({
@@ -86,6 +87,23 @@ router.get('/profile', (req,res)=>{
     })
   });
 })
+
+// // Get public profile
+// router.get('/public-profile/:id', (req,res)=>{
+//   let userId = req.params.id;
+//   User.findById(userId)
+//   .then ((userData)=>{
+//     res.status(200).json({
+//       messageBody: "Fetch successful.",
+//       data: userData
+//     })
+//   })
+//   .catch(err => {
+//     res.status(500).json({
+//       messageBody: `Error, could not fetch user data because: ${err}`
+//     })
+//   });
+// })
 
 
 

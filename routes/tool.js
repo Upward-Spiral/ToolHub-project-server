@@ -1,10 +1,8 @@
 const express           = require('express');
 const router            = express.Router();
 const Tool              = require ('../models/Tool');
-// const multer         = require('multer');
 const uploadCloudTool   = require('../config/cloudinaryTool.js');
-const createTool = require('../controllers/create-tool');
-// const createToolNoImg   = require('../controllers/create-tool-no-img');
+const createTool        = require('../controllers/create-tool');
 const deleteTool        = require ('../controllers/delete-tool');
 const getAllHerTools    = require ('../controllers/get-all-tools');
 const updateTool        = require ('../controllers/update-tool')
@@ -61,9 +59,9 @@ router.post('/search', (req, res, next) => {
 });
 
 // Get list of all her tools
-router.get('/toolshed', (req,res)=> {
+router.get('/toolshed/:id', (req,res)=> {
   debugger
-  let userId = req.session.currentUser._id;
+  let userId = req.params.id;
   getAllHerTools(userId)
     .then ((toolsList)=>{
       res.status(200).json({
@@ -84,6 +82,7 @@ router.get('/detail/:id', (req,res) => {
   let toolId = req.params.id;
   Tool.findById(toolId)
     .populate('owner')
+    .populate("lended_to")
     .then((toolData) => {
       res.status(200).json({toolData})
     })

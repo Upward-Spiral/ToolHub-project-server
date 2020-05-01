@@ -4,39 +4,47 @@ const router            = express.Router();
 const User              = require ('../models/User')
 const updateInfo        = require ("../controllers/update-info");
 const updateProfileImg  = require ('../controllers/update-profile-img');
-
 const deleteTool        = require ('../controllers/delete-tool');
-const uploadCloudUsers       = require ('../config/cloudinaryUsers.js');
+const uploadCloudUser       = require ('../config/cloudinaryUser.js');
 // const getGeoJsonLocation = require ('../controllers/get-location')
 
-// Update user info inside the app
-router.post('/update', uploadCloudUsers.single('user-img'), (req,res)=>{
-
-  let userId = req.session.currentUser._id;
-  if (!req.file) {
+// Update user info - no image
+router.post('/update', (req,res)=>{
+  debugger
+  let userId = req.session.currentUser._id; 
     updateInfo(req.body,userId)
       .then((response) => {
         let {status,messageBody,data}= response;
-        if (status === 200) {
-          res.status(200).json({
-            messageBody: messageBody,
-            data:data
-          })
+        if (status === 200) {  
+          res.status(200).json(data)
         } else {
           res.status(500).json({
               messageBody: messageBody
             });
         }
       })
-  } else {
-    updateProfileImg(userId,req.file)
+
+})
+
+// Upload images for a user
+router.post('/upload-image', uploadCloudUser.single('user-img'), (req,res)=>{
+  debugger
+  const imgPath= req.file.url;
+  const imgName= req.file.originalname;
+  var newImage = {imgName:imgName, imgPath:imgPath};
+  console.log(newImage);
+  res.status(200).json(newImage);
+})
+
+// Update a user's image
+router.post('/update-img', (req,res) => {
+  let userId = req.session.currentUser._id;
+  let newImage = qs.parse(req.body); 
+  updateProfileImg(userId,newImage)
     .then((response) => {
       let {status,messageBody,data}= response;
       if (status === 200) {
-        res.status(200).json({
-          messageBody: messageBody,
-          data:data
-        })
+        res.status(200).json(data)
       } else {
         res.status(500).json({
             messageBody: messageBody
@@ -44,10 +52,6 @@ router.post('/update', uploadCloudUsers.single('user-img'), (req,res)=>{
       }
     })
 
-  }
-
-   
-  
 })
 
 // Get list of her friends
@@ -87,25 +91,6 @@ router.get('/profile/:id', (req,res)=>{
     })
   });
 })
-
-// // Get public profile
-// router.get('/public-profile/:id', (req,res)=>{
-//   let userId = req.params.id;
-//   User.findById(userId)
-//   .then ((userData)=>{
-//     res.status(200).json({
-//       messageBody: "Fetch successful.",
-//       data: userData
-//     })
-//   })
-//   .catch(err => {
-//     res.status(500).json({
-//       messageBody: `Error, could not fetch user data because: ${err}`
-//     })
-//   });
-// })
-
-
 
 // Logout
 router.get('/logout', (req, res) => {

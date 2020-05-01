@@ -146,24 +146,23 @@ router.post ('/update-img', (req,res) => {
   let toolId = req.body.id
   let newImage = qs.parse(req.body)
   Tool.findById(toolId)
-  .then((toolData) => {
-    if(toolData.images) toolData.images.push(newImage);
-    toolData.save()
-      .then((toolData)=>{
-        console.log(toolData)
-        res.status(200).json ({toolData})
-      .catch(err => {
-        console.log(err)
-      }); 
-    
+    .then((toolData) => {
+      if(toolData.images) toolData.images.push(newImage);
+      toolData.save()
+        .then((toolData)=>{
+          console.log(toolData)
+          res.status(200).json (toolData)
+        })
+        .catch(err => {
+          console.log(err)
+        });
     })
-  })
-  .catch(err => {
-   res.status(500).json({
-      messageBody: `Error, from outer catch in controller because: ${err}`,
-      data: null
-    })
-  }); 
+    .catch(err => {
+    res.status(500).json({
+        messageBody: `Error, from outer catch in route because: ${err}`,
+        data: null
+      })
+    }); 
 })
 
 // Upload images for a tool

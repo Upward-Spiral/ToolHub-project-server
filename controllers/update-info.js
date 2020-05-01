@@ -3,6 +3,7 @@ const User = require('../models/User')
 function updateInfo(body,userId){
   debugger
   let {street1,street2,lotNo,unitNo,city,pcode} = body;
+  let {firstname,lastname,displayname,email,phone} = body
   let type = body.locationType
   let locationLatt = Number(body.locationLatt) 
   let locationLong = Number(body.locationLong) 
@@ -10,9 +11,10 @@ function updateInfo(body,userId){
   // let theLocation = {type,coordinates}
   return User
       .findByIdAndUpdate(userId,{
-        firstname: body.firstname,
-        lastname: body.lastname,
-        phone: body.phone,
+        firstname: firstname,
+        lastname: lastname,
+        displayname: displayname,
+        phone: phone,
         "$set": {
           address: {street1,street2,lotNo,unitNo,city,pcode},
           location: {type,coordinates}

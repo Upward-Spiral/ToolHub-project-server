@@ -1,14 +1,14 @@
 const User = require('../models/User')
 
-function updateProfileImg (userId,file) {
-  const imgPath = file.url;
-  const imgName = file.originalname;
-  var newImage = {"imgName":imgName, "imgPath":imgPath};
+function updateProfileImg (userId,newImage) {
+  // const imgPath = file.url;
+  // const imgName = file.originalname;
+  // var newImage = {"imgName":imgName, "imgPath":imgPath};
   return User
     .findById(userId)
     .then((userData) => {
         // debugger
-        userData.images.push(newImage);
+        if (userData.images) userData.images.unshift(newImage);
         userData.save()
           .then((userData)=> {
             console.log(userData)

@@ -102,15 +102,15 @@ router.get('/signup_emailcheck/:email', (req, res) => {
 })
 
 // Check username and password for being the same
-router.post('/signup_userpasscheck', (req, res) => {
-  let username = req.body.username;
-  let password = req.body.password;
-  if (username === password) {
-    res.status(400).json({
-      messageBody: 'Username and password can not be the same. Please, try again!',
-    });
-  } 
-})
+// router.post('/signup_userpasscheck', (req, res) => {
+//   let username = req.body.username;
+//   let password = req.body.password;
+//   if (username === password) {
+//     res.status(400).json({
+//       messageBody: 'Username and password can not be the same. Please, try again!',
+//     });
+//   } 
+// })
 
 // Double-Check password
 router.post('/signup_passdoublecheck', (req, res) => {

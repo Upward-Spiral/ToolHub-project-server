@@ -65,14 +65,19 @@ router.post('/update-np', (req,res)=>{
 
 // Check username for uniqueness
 router.get('/signup_usernamecheck/:username', (req, res) => {
+  debugger
   let username = req.params.username;
   User
   .findOne({ username: username })
   .then(user => {
     if (user !== null) {
-      res.status(201).json({
+      res.status(204).json({
         messageBody: 'Username already exist. Choose another username!',
       }); 
+    } else {
+      res.status(200).json({
+        messageBody: 'Username is free to take!',
+      })
     }
   })
   .catch(err => {
@@ -84,6 +89,7 @@ router.get('/signup_usernamecheck/:username', (req, res) => {
 
 // Check email for uniqueness
 router.get('/signup_emailcheck/:email', (req, res) => {
+  debugger
   let email = req.params.email;
   User
   .findOne({ email: email })
@@ -113,15 +119,15 @@ router.get('/signup_emailcheck/:email', (req, res) => {
 // })
 
 // Double-Check password
-router.post('/signup_passdoublecheck', (req, res) => {
-  let password_check = req.body.password_check;
-  let password = req.body.password;
-  if(password_check !== password){
-    res.status(401).json ({
-      messageBody: 'Password check failed!',
-    })
-  }
-})
+// router.post('/signup_passdoublecheck', (req, res) => {
+//   let password_check = req.body.password_check;
+//   let password = req.body.password;
+//   if(password_check !== password){
+//     res.status(401).json ({
+//       messageBody: 'Password check failed!',
+//     })
+//   }
+// })
 
 // Login
 router.post('/login', (req, res) => {

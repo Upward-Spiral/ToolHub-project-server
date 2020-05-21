@@ -93,41 +93,23 @@ router.get('/signup_emailcheck/:email', (req, res) => {
   let email = req.params.email;
   User
   .findOne({ email: email })
-  .then(user => {
-    if (user !== null) {
-      res.status(201).json({
-        messageBody: 'email already exist. Choose another email!',
-      }); 
-    }
-  })
-  .catch(err => {
-    res.status(500).json({
-      messageBody: `Error, user not created ${err}`
+    .then(user => {
+      if (user !== null) {
+        res.status(204).json({
+          messageBody: 'email already exist. Choose another email!',
+        }); 
+      } else {
+        res.status(200).json({
+          messageBody: 'Username is free to take!',
+        })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, email check failed because: ${err}`
+      });
     });
-  });
 })
-
-// Check username and password for being the same
-// router.post('/signup_userpasscheck', (req, res) => {
-//   let username = req.body.username;
-//   let password = req.body.password;
-//   if (username === password) {
-//     res.status(400).json({
-//       messageBody: 'Username and password can not be the same. Please, try again!',
-//     });
-//   } 
-// })
-
-// Double-Check password
-// router.post('/signup_passdoublecheck', (req, res) => {
-//   let password_check = req.body.password_check;
-//   let password = req.body.password;
-//   if(password_check !== password){
-//     res.status(401).json ({
-//       messageBody: 'Password check failed!',
-//     })
-//   }
-// })
 
 // Login
 router.post('/login', (req, res) => {

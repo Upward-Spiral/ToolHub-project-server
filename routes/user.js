@@ -119,7 +119,7 @@ router.get('/delete', (req,res)=> {
             console.log(response)
           })
           .catch(err => {
-            console.log( `Error, user deleted because: ${err}`)
+            console.log( `Error, tools which belong tothe user not deleted because: ${err}`)
           })
         });
       });
@@ -134,7 +134,7 @@ router.get('/delete', (req,res)=> {
     .catch(err => {
       return ({
         status: 500,
-        messageBody: `Error, user deleted because: ${err}`,
+        messageBody: `Error, user not deleted because: ${err}`,
         data: null
       })
     });

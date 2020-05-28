@@ -144,7 +144,7 @@ router.post ('/update', (req,res) => {
 router.post ('/update-img', (req,res) => {
   debugger
   let toolId = req.body.id
-  let newImage = qs.parse(req.body)
+  let newImage = req.body
   Tool.findById(toolId)
     .then((toolData) => {
       if(toolData.images) toolData.images.push(newImage);

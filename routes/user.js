@@ -1,11 +1,11 @@
 const express           = require('express');
 const router            = express.Router();
-// const bcrypt = require('bcrypt');
+var qs                  = require('qs');
 const User              = require ('../models/User')
 const updateInfo        = require ("../controllers/update-info");
 const updateProfileImg  = require ('../controllers/update-profile-img');
 const deleteTool        = require ('../controllers/delete-tool');
-const uploadCloudUser       = require ('../config/cloudinaryUser.js');
+const uploadCloudUser   = require ('../config/cloudinaryUser.js');
 // const getGeoJsonLocation = require ('../controllers/get-location')
 
 // Update user info - no image
@@ -37,9 +37,11 @@ router.post('/upload-image', uploadCloudUser.single('user-img'), (req,res)=>{
 })
 
 // Update a user's image
-router.post('/update-img', (req,res) => {
+router.post('/update-image', (req,res) => {
+  debugger
   let userId = req.session.currentUser._id;
   let newImage = qs.parse(req.body); 
+  console.log (newImage)
   updateProfileImg(userId,newImage)
     .then((response) => {
       let {status,messageBody,data}= response;

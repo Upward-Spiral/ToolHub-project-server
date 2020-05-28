@@ -1,22 +1,17 @@
 const User = require('../models/User')
 
 function updateProfileImg (userId,newImage) {
-  // const imgPath = file.url;
-  // const imgName = file.originalname;
-  // var newImage = {"imgName":imgName, "imgPath":imgPath};
+  debugger
   return User
-    .findById(userId)
-    .then((userData) => {
-        // debugger
-        if (userData.images) userData.images.unshift(newImage);
-        userData.save()
-          .then((userData)=> {
-            console.log(userData)
-          })
-          .catch(err => {
-            console.log(err)
-          });
-        
+    .findOneAndUpdate({_id:userId},{
+      $push:{
+        images: {
+          "$each": [newImage],
+          "$position": 0
+       }
+      }     
+    },{new:true})
+    .then((userData) => {        
         return ({
           status: 200,
           messageBody: "Update successfull.",

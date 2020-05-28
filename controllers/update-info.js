@@ -8,7 +8,6 @@ function updateInfo(body,userId){
   let locationLatt = Number(body.locationLatt) 
   let locationLong = Number(body.locationLong) 
   let coordinates= [locationLong,locationLatt]
-  // let theLocation = {type,coordinates}
   return User
       .findByIdAndUpdate(userId,{
         firstname: firstname,

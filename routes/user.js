@@ -12,7 +12,8 @@ const uploadCloudUser   = require ('../config/cloudinaryUser.js');
 router.post('/update', (req,res)=>{
   debugger
   let userId = req.session.currentUser._id; 
-    updateInfo(req.body,userId)
+  let userInfo = qs.parse(req.body)
+    updateInfo(userInfo,userId)
       .then((response) => {
         let {status,messageBody,data}= response;
         if (status === 200) {  

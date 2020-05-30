@@ -38,7 +38,7 @@ router.post('/signup', (req, res, next) => {
     }
   });
 });
-
+ 
 // Update user info from Signup (Second page)
 router.post('/update-np', (req,res)=>{
   let userId = req.body._id

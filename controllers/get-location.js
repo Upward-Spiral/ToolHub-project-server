@@ -13,7 +13,7 @@ function getGeoJsonLocation (theAddress) {
             method: "GET",
             params:{
                 address: theAddress,
-                key: "AIzaSyBTM6vT7ygkZ9wufF1ptGOTMzf8fQ6a2Hw"
+                key: ""
             }
         })
         .then((res) => {

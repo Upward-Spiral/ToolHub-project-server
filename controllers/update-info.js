@@ -1,12 +1,14 @@
 const User = require('../models/User')
+var qs     = require('qs');
 
 function updateInfo(userInfo,userId){
   debugger
-  let {street1,street2,lotNo,unitNo,city,pcode} = userInfo.address[0];
-  let {firstname,lastname,displayname,email,phone} = userInfo
-  let type = userInfo.locationType
-  let locationLatt = Number(userInfo.locationLatt) 
-  let locationLong = Number(userInfo.locationLong) 
+  let user = qs.parse(userInfo)
+  let {street1,street2,lotNo,unitNo,city,pcode} = user.address[0];
+  let {firstname,lastname,displayname,email,phone} = user
+  let type = user.locationType
+  let locationLatt = Number(user.locationLatt) 
+  let locationLong = Number(user.locationLong) 
   let coordinates= [locationLong,locationLatt]
   return User
       .findByIdAndUpdate(userId,{

@@ -46,10 +46,8 @@ router.post('/update-np', (req,res)=>{
    .then((response)=> {
     let {status,messageBody,data}= response;
     if (status===200) {
-      res.status(200).json({
-        messageBody: messageBody,
-        data:data
-      })
+      console.log(messageBody)
+      res.status(200).json(data)
     } else {
       res.status(500).json({
           messageBody: messageBody

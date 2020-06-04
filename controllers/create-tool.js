@@ -27,16 +27,16 @@ function createTool (userId,body) {
           toolData.save()
             .then((toolData)=>{
               console.log(toolData)
-
+              return ({
+                status: 200,
+                messageBody: "created successfully.",
+                data: toolData
+              })
             })
             .catch(err => {
               console.log(err)
             }); 
-          return ({
-            status: 200,
-            messageBody: "created successfully.",
-            data: toolData
-          })
+          console.log(toolData)
         })
         .catch(err => {
           return ({

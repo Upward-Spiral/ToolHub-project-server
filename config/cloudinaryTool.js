@@ -19,6 +19,19 @@ var storage = cloudinaryStorage({
   }
 });
 
+// for later work on uplading images to folders for each user
+// var storage2 = cloudinaryStorage({
+//   cloudinary: cloudinary,
+//   folder: function (req, file, cb) {
+//     cb(null, `toolshare/tools/${req.}`);
+//   }, // The name of the folder in cloudinary
+//   allowedFormats: ['jpg', 'png', 'jpeg'],
+//   filename: function (req, file, cb) {
+//     cb(null, file.originalname); // The file on cloudinary would have the same name as the original file name
+//   }
+// });
+
 const uploadCloudTool = multer({ storage: storage });
+// const uploadCloudTool = multer({ storage: storage2 });
 
 module.exports = uploadCloudTool;

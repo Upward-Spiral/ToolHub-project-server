@@ -64,10 +64,7 @@ router.get('/toolshed/:id', (req,res)=> {
   let userId = req.params.id;
   getAllHerTools(userId)
     .then ((toolsList)=>{
-      res.status(200).json({
-        messageBody: "Fetch successful.",
-        data: toolsList
-      })
+      res.status(200).json(toolsList)
     })
     .catch(err => {
       res.status(500).json({

@@ -44,20 +44,24 @@ const toolSchema = new Schema({
       },
       requested_by:[{
         type: mongoose.Types.ObjectId, 
-        ref: "users"
+        ref: "users",
+        default: []
       }],
       reserved_by:[{
         type: mongoose.Types.ObjectId, 
-        ref: "users"
+        ref: "users",
+        default: []
       }],
       lended_to:{
         type: mongoose.Types.ObjectId, 
-        ref: "users"
-      },
-      reserved_for:[{
-        type: mongoose.Types.ObjectId, 
-        ref: "users"
-      }]
+        ref: "users",
+        default: null
+      }
+      // ,
+      // reserved_for:[{
+      //   type: mongoose.Types.ObjectId, 
+      //   ref: "users"
+      // }]
   
   });
 

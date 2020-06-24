@@ -4,14 +4,13 @@ var qs = require('qs');
 
 function createTool (userId,body) {
   debugger
-    var tempTool = qs.parse(body);
-    if (tempTool.images) var newImage = tempTool.images[0];   
+    var tempTool = qs.parse(body);   
     let type = body.locationType
-    debugger
     let locationLatt = Number(body.locationLatt);
     let locationLong = Number(body.locationLong);
     let coordinates= [locationLong,locationLatt]
     const tempCategory= tempTool.category;
+    const tempImages = tempTool.images
     return Tool
         .create ({
           name: body.name,
@@ -20,23 +19,16 @@ function createTool (userId,body) {
           category: tempCategory,
           description: body.description,
           owner: userId,
-          location: {type,coordinates}
+          location: {type,coordinates},
+          images: tempImages
         })
         .then((toolData) => {
-          if(toolData.images) toolData.images.push(newImage);
-          toolData.save()
-            .then((toolData)=>{
               console.log(toolData)
               return ({
                 status: 200,
                 messageBody: "created successfully.",
                 data: toolData
               })
-            })
-            .catch(err => {
-              console.log(err)
-            }); 
-          console.log(toolData)
         })
         .catch(err => {
           return ({

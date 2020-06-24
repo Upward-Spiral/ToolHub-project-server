@@ -1,5 +1,6 @@
 const express           = require('express');
 const router            = express.Router();
+const qs                = require('qs');
 const Tool              = require ('../models/Tool');
 const uploadCloudTool   = require('../config/cloudinaryTool.js');
 const createTool        = require('../controllers/create-tool');
@@ -140,11 +141,10 @@ router.post ('/update', (req,res) => {
 // Update a tool's image
 router.post ('/update-img', (req,res) => {
   debugger
-  let toolId = req.body.id
-  let newImage = req.body
+  let {newImg, toolId} = qs.parse(req.body) 
   Tool.findById(toolId)
     .then((toolData) => {
-      if(toolData.images) toolData.images.push(newImage);
+      if(toolData.images) toolData.images.push(newImg);
       toolData.save()
         .then((toolData)=>{
           console.log(toolData)

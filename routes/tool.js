@@ -25,15 +25,7 @@ router.post('/search', (req, res, next) => {
         'distanceField': 'distanceFrom', 
         'maxDistance': 200000, 
         'query': {
-          // $and:[
-          //   {
               'name': new RegExp(searchPhrase)
-           // }
-          //   ,{
-          //     'owner': 
-          //       {'$ne': new ObjectId(userId)}
-          //   }
-          // ]
         }
         
       }
@@ -98,8 +90,8 @@ router.post("/create", (req,res)=>{
   let userId = req.session.currentUser._id;
     createTool(userId,req.body)
     .then ((response) => {
-      let {status,messageBody,data}= response;
-      if (status===200) {
+      let {status, messageBody, data} = response;
+      if (status === 200) {
         res.status(200).json(data)
       } else {
         res.status(500).json({
@@ -229,7 +221,31 @@ router.get('/borrow/:id', (req,res) => { // not finished
         messageBody: `Error, could not fetch tool detail because: ${err}`
       })
     });
+})
 
+// Withdraw request to Borrow a tool
+router.get('/unborrow/:id', (req,res) => { // not finished
+  debugger
+  let userId = req.session.currentUser._id;
+  let toolId = req.params.id; 
+  Tool.findById(toolId)
+    .then((toolData) => {
+      toolData.requested_by.splice(toolData.requested_by.indexOf(userId),1)
+      toolData.save()
+        .then((toolData)=>{
+          console.log(toolData)
+          res.status(200).json (toolData)
+        })
+        .catch(err => {
+          console.log(err)
+        });
+    })
+    .catch(err => {
+    res.status(500).json({
+        messageBody: `Error, from outer catch in route because: ${err}`,
+        data: null
+      })
+    });
 })
 
 // Reserve a tool

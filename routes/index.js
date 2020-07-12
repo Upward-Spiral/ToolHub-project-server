@@ -111,6 +111,7 @@ router.get('/signup_emailcheck/:email', (req, res) => {
 
 // Login
 router.post('/login', (req, res) => {
+  debugger
   const {username, password} = req.body;
   if (username === '' || password === ''){
     res.status(401).json({
@@ -125,22 +126,26 @@ router.post('/login', (req, res) => {
     .populate("buddies")
     .then(user => {
       if (!user) {
-        res.status(404).json({
-          messageBody: 'This user does not exist. Click on signup if you want to create it.',
+        res.status(204).json({
+          messageBody: 'This user does not exist. Click on signup if you want to create it.'
+        });
+      } else {
+        bcrypt.compare(password, user.password, function(err, correctPassword) {
+          if (err) 
+            res.status(500).json({
+            messageBody: `Error, user not logged in because: ${err}`
+          });
+          else if (!correctPassword) 
+            res.status(203).json({
+            messageBody: 'Wrong password. Try again!'
+          });
+          else {
+            req.session.currentUser = user;
+            res.status(201).json(user);
+          }
         });
       }
-      bcrypt.compare(password, user.password, function(err, correctPassword) {
-        if (err) res.status(500).json({
-          messageBody: `Error, user not logged in because: ${err}`
-        });
-        else if (!correctPassword) res.status(403).json({
-          messageBody: 'Wrong password. Try again!'
-        });
-        else {
-          req.session.currentUser = user;
-          res.status(201).json(user);
-        }
-      });
+      
     })
     .catch(err => {
       res.status(500).json({

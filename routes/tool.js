@@ -7,6 +7,7 @@ const createTool        = require('../controllers/create-tool');
 const deleteTool        = require ('../controllers/delete-tool');
 const getAllHerTools    = require ('../controllers/get-all-tools');
 const updateTool        = require ('../controllers/update-tool')
+const getAllRequests    = require ('../controllers/get-requests')
 
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
@@ -51,13 +52,35 @@ router.post('/search', (req, res, next) => {
     });
 });
 
-// Get list of all her tools
+// Get the list of all her tools
 router.get('/toolshed/:id', (req,res)=> {
   debugger
   let userId = req.params.id;
   getAllHerTools(userId)
     .then ((toolsList)=>{
       res.status(200).json(toolsList)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch tool list because: ${err}`
+      })
+    });
+})
+
+// Get the list of all the requests for a tool
+router.get('/requests', (req,res)=> {
+  debugger
+  let userId = req.session.currentUser._id;
+  // let toolId = req.params.id;
+  getAllRequests(userId)
+    .then ((toolsList)=>{
+      if (toolsList) {
+        res.status(200).json(toolsList)
+      } else {
+        res.status(204).json({
+          messageBody: "for some reason, no toollist was returned. Check the server console for error"
+        })
+      }
     })
     .catch(err => {
       res.status(500).json({
@@ -210,7 +233,8 @@ router.get('/borrow/:id', (req,res) => { // not finished
   Tool.findByIdAndUpdate(toolId, {
     $push:{
       requested_by: userId
-    }
+    },
+    new_reqs: true
   },{new:true})
     .then((toolData) => {
       console.log(toolData)
@@ -272,18 +296,19 @@ router.get('/reserve/:id', (req,res) => {   // not finished!
 // Lend tool
 router.post('/lend', (req,res) => {   // not finished!
   debugger
-  let toolId = req.body.tool;
-  var requesterId = req.body.requester
+  let toolId = req.body.toolId;
+  var requesterId = req.body.requesterId
   Tool.findByIdAndUpdate(toolId, {
     $push:{
       lended_to: requesterId
     }
   },{new:true})
     .then((toolData) => {
-      toolData.requested_by.pull(requesterId)
+      toolData.requested_by.splice(toolData.requested_by.indexOf(requesterId),1)
       toolData.save()
         .then((response)=>{
-          console.log(toolData)
+          console.log(response)
+          // not finished!!!!!!!!!!
           res.status(200).json(toolData)
         })
         .catch ((err)=>{

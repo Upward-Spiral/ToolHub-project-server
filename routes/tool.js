@@ -7,7 +7,8 @@ const createTool        = require('../controllers/create-tool');
 const deleteTool        = require ('../controllers/delete-tool');
 const getAllHerTools    = require ('../controllers/get-all-tools');
 const updateTool        = require ('../controllers/update-tool')
-const getAllRequests    = require ('../controllers/get-requests')
+const getAllRequests    = require ('../controllers/get-requests');
+const FormReserveLine = require('../controllers/form-reserve-line');
 
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
@@ -71,7 +72,6 @@ router.get('/toolshed/:id', (req,res)=> {
 router.get('/requests', (req,res)=> {
   debugger
   let userId = req.session.currentUser._id;
-  // let toolId = req.params.id;
   getAllRequests(userId)
     .then ((toolsList)=>{
       if (toolsList) {
@@ -304,21 +304,37 @@ router.post('/lend', (req,res) => {   // not finished!
     }
   },{new:true})
     .then((toolData) => {
+      // removes the requester from the requester list
       toolData.requested_by.splice(toolData.requested_by.indexOf(requesterId),1)
       toolData.save()
         .then((response)=>{
           console.log(response)
-          // not finished!!!!!!!!!!
-          res.status(200).json(toolData)
+          // moves all the other requesters to the reservers list
+          FormReserveLine(response._id, response.requested_by)
+            .then((listData) => {
+              if (listData) {
+                res.status(200).json(listData)
+              } else {
+                res.status(500).json({messageBody: 'error in the controller while forming reserved list'})  
+              }
+            })
+            .catch((err) => {
+              console.log('error in forming reserved list', err)
+              res.status(500).json({messageBody: 'error in forming reserved list'})
+            })
+          
         })
         .catch ((err)=>{
           console.log(err)
+          res.status(500).json({
+            messageBody: `Error, could not complete lending the tool because: ${err}`
+          })
         })
       
     })
     .catch(err => {
       res.status(500).json({
-        messageBody: `Error, could not fetch tool detail because: ${err}`
+        messageBody: `Error, could not lend the tool because: ${err}`
       })
     });
 

@@ -52,16 +52,11 @@ const toolSchema = new Schema({
         ref: "users",
         default: []
       }],
-      lended_to:{
+      lended_to:[{
         type: mongoose.Types.ObjectId, 
         ref: "users",
-        default: null
-      }
-      // ,
-      // reserved_for:[{
-      //   type: mongoose.Types.ObjectId, 
-      //   ref: "users"
-      // }]
+        default: []
+      }]
   
   });
 

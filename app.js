@@ -46,18 +46,6 @@ app.use(
   })
 );
 
-// var whitelist = ['http://localhost:3000', 'http://localhost:5555']
-// var corsOptions = {
-//   credentials: true,
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS, because I said so!'))
-//     }
-//   }
-// }
-
 // Middleware Setup
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -69,7 +57,6 @@ app.use(cors({
 }))
 
 // Express View engine setup
-
 app.use(require('node-sass-middleware')({
   src:  path.join(__dirname, 'public'),
   dest: path.join(__dirname, 'public'),

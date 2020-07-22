@@ -1,11 +1,16 @@
 // const User  = require('../models/User');
 const Tool  = require ('../models/Tool');
 
-function getAllHerTools (userId) {
+function getAllHerBorrowedTools (userId) {
   debugger
-  return Tool.find({owner:userId})
-          // .populate('requested_by')
-          .populate("lended_to")
+  return Tool.find(
+          {
+            lended_to: {
+              $elemMatch: {$eq:userId}
+            }
+          }
+          )
+          .populate("owner")
           .then((toolList)=>{
             return toolList
           })
@@ -15,4 +20,5 @@ function getAllHerTools (userId) {
           })
 }
 
-module.exports = getAllHerTools;
+module.exports = getAllHerBorrowedTools;
+

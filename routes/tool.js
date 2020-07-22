@@ -1,14 +1,15 @@
-const express           = require('express');
-const router            = express.Router();
-const qs                = require('qs');
-const Tool              = require ('../models/Tool');
-const uploadCloudTool   = require('../config/cloudinaryTool.js');
-const createTool        = require('../controllers/create-tool');
-const deleteTool        = require ('../controllers/delete-tool');
-const getAllHerTools    = require ('../controllers/get-all-tools');
-const updateTool        = require ('../controllers/update-tool')
-const getAllRequests    = require ('../controllers/get-requests');
-const FormReserveLine = require('../controllers/form-reserve-line');
+const express               = require('express');
+const router                = express.Router();
+const qs                    = require('qs');
+const Tool                  = require ('../models/Tool');
+const uploadCloudTool       = require('../config/cloudinaryTool.js');
+const createTool            = require('../controllers/create-tool');
+const deleteTool            = require ('../controllers/delete-tool');
+const getAllHerTools        = require ('../controllers/get-all-tools');
+const getAllHerBorrowedTools= require('../controllers/get-borrowed-tools');
+const updateTool            = require ('../controllers/update-tool')
+const getAllRequests        = require ('../controllers/get-requests');
+const FormReserveLine       = require('../controllers/form-reserve-line');
 
 // Search all the shared tools by name
 router.post('/search', (req, res, next) => {
@@ -64,6 +65,21 @@ router.get('/toolshed/:id', (req,res)=> {
     .catch(err => {
       res.status(500).json({
         messageBody: `Error, could not fetch tool list because: ${err}`
+      })
+    });
+})
+
+// Get the list of all her BORROWED tools
+router.get('/borrowed/:id', (req,res)=> {
+  debugger
+  let userId = req.params.id;
+  getAllHerBorrowedTools(userId)
+    .then ((toolsList)=>{
+      res.status(200).json(toolsList)
+    })
+    .catch(err => {
+      res.status(500).json({
+        messageBody: `Error, could not fetch borrowed tool list because: ${err}`
       })
     });
 })

@@ -123,7 +123,7 @@ router.post('/login', (req, res) => {
     .findOne({
         username
     })
-    .populate("buddies")
+    //.populate("buddies")
     .then(user => {
       if (!user) {
         res.status(204).json({

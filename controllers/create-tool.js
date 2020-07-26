@@ -22,6 +22,7 @@ function createTool (userId,body) {
           location: {type,coordinates},
           images: tempImages
         })
+        .populate('owner')
         .then((toolData) => {
               console.log(toolData)
               return ({

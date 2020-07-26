@@ -177,6 +177,7 @@ router.post ('/update-img', (req,res) => {
     .then((toolData) => {
       if(toolData.images) toolData.images.push(newImg);
       toolData.save()
+        .populate('owner')
         .then((toolData)=>{
           console.log(toolData)
           res.status(200).json (toolData)
@@ -210,6 +211,7 @@ router.get('/share/:id', (req,res) => {
   Tool.findByIdAndUpdate(toolId, {
     shared:true
   },{new:true})
+    .populate('owner')
     .then((toolData) => {
       console.log(toolData)
       res.status(200).json(toolData)
@@ -229,6 +231,7 @@ router.get('/unshare/:id', (req,res) => {
   Tool.findByIdAndUpdate(toolId, {
     shared:false
   },{new:true})
+    .populate('owner')
     .then((toolData) => {
       console.log(toolData)
       res.status(200).json(toolData)
@@ -252,6 +255,7 @@ router.get('/borrow/:id', (req,res) => { // not finished
     },
     new_reqs: true
   },{new:true})
+    .populate('owner')
     .then((toolData) => {
       console.log(toolData)
       res.status(200).json(toolData)
@@ -272,6 +276,7 @@ router.get('/unborrow/:id', (req,res) => { // not finished
     .then((toolData) => {
       toolData.requested_by.splice(toolData.requested_by.indexOf(userId),1)
       toolData.save()
+        .populate('owner')
         .then((toolData)=>{
           console.log(toolData)
           res.status(200).json (toolData)
@@ -297,6 +302,7 @@ router.get('/reserve/:id', (req,res) => {   // not finished!
       reserved_by: userId
     }
   },{new:true})
+    .populate('owner')
     .then((toolData) => {
       console.log(toolData)
       res.status(200).json(toolData)

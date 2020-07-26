@@ -14,6 +14,7 @@ function updateTool (toolId,body) {
           category: tempCategory,
           description: body.description
         },{new:true})
+        .populate('owner')
         .then((toolData) => {
           
           return ({

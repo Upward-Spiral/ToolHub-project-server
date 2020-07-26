@@ -12,6 +12,7 @@ function createToolNoImg (userId,body) {
         owner: userId,
         shared: false
       })
+      .populate('owner')
       .then((toolData)=>{
           console.log("created: ", toolData)
           return ({

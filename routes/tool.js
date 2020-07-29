@@ -84,7 +84,7 @@ router.get('/borrowed/:id', (req,res)=> {
     });
 })
 
-// Get the list of all the requests for a tool
+// Get the list of all the requests
 router.get('/requests', (req,res)=> {
   debugger
   let userId = req.session.currentUser._id;
@@ -293,6 +293,32 @@ router.get('/unborrow/:id', (req,res) => { // not finished
     });
 })
 
+// Withdraw request to reserve a tool
+router.get('/unreserve/:id', (req,res) => { // not finished
+  debugger
+  let userId = req.session.currentUser._id;
+  let toolId = req.params.id; 
+  Tool.findById(toolId)
+    .then((toolData) => {
+      toolData.reserved_by.splice(toolData.reserved_by.indexOf(userId),1)
+      toolData.save()
+        .populate('owner')
+        .then((toolData)=>{
+          console.log(toolData)
+          res.status(200).json (toolData)
+        })
+        .catch(err => {
+          console.log(err)
+        });
+    })
+    .catch(err => {
+    res.status(500).json({
+        messageBody: `Error, from outer catch in route because: ${err}`,
+        data: null
+      })
+    });
+})
+
 // Reserve a tool
 router.get('/reserve/:id', (req,res) => {   // not finished!
   debugger
@@ -321,8 +347,9 @@ router.post('/lend', (req,res) => {   // not finished!
   let toolId = req.body.toolId;
   var requesterId = req.body.requesterId
   Tool.findByIdAndUpdate(toolId, {
-    $push:{
-      lended_to: requesterId
+    $set:{
+      lended_to: [requesterId],
+      available: false
     }
   },{new:true})
     .then((toolData) => {

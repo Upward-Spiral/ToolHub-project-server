@@ -1,4 +1,4 @@
-const User = require('../models/User')
+const User = require('../models/User');
 var qs     = require('qs');
 
 function updateInfo(userInfo,userId){

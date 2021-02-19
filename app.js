@@ -93,7 +93,7 @@ app.use('/transaction', transaction);
 // const location = require('./routes/location');
 // app.use('/location', location);
 
-// Function defenitions
+// Function definitions
 //middleware definition
 function protect (req,res,next){ 
   // debugger
